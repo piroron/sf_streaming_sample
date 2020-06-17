@@ -141,3 +141,5 @@ key
 
 server.key
 server.crt
+
+.vscode/settings.json
