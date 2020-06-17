@@ -4,7 +4,7 @@ from gevent import monkey
 monkey.patch_all()
 
 from getpass import getpass
-import salesforce_streaming_client
+from salesforce_streaming_client import SalesforceStreamingClient
 
 
 def main():
@@ -14,9 +14,26 @@ def main():
 
     print(oauth_info)
 
+    # todo: use ServiceApplicationClient class
+
+    with ClientOne(
+        oauth_client_id=oauth_info[0],
+        client_secret=oauth_info[1],
+        username=oauth_info[2]
+    ) as client:
+        client.subscribe('/u/aaa', 'shutdown_myself')
+        client.start()
+        client.block()
+
     # v = getpass('input user name.')
     # print(v)
 
+class ClientOne(SalesforceStreamingClient):
+    def shutdown_myself(self, connect_response_element):
+        connect_response_element_payload = \
+            connect_response_element['data']['payload']
+        self.result = connect_response_element_payload
+        self.shutdown()
 
 def get_oauth_info():
     # Yes, it's annoying that you can't see these that are not
