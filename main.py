@@ -5,6 +5,7 @@ monkey.patch_all()
 
 from getpass import getpass
 from salesforce_streaming_client import SalesforceStreamingClient
+from salesforce_requests_oauthlib import ServiceApplicationClient, SalesforceOAuth2Session
 
 
 def main():
@@ -13,8 +14,6 @@ def main():
     oauth_info = get_oauth_info()
 
     print(oauth_info)
-
-    # todo: use ServiceApplicationClient class
 
     with ClientOne(
         oauth_client_id=oauth_info[0],
@@ -25,8 +24,27 @@ def main():
         client.start()
         client.block()
 
-    # v = getpass('input user name.')
-    # print(v)
+    # todo: use ServiceApplicationClient class
+    # jwt = ServiceApplicationClient(
+    #     client_id=oauth_info[0],
+    #     private_key=open('pem/myapp.pem', 'r').read(),
+    #     subject=oauth_info[2],
+    #     issuer=oauth_info[0],
+    #     audience='https://login.salesforce.com'
+    # )
+    # j = SalesforceOAuth2Session(
+    #     client_id=oauth_info[0],
+    #     client_secret=oauth_info[1],
+    #     username=oauth_info[2]
+    #     # ,
+    #     # oauth2client=jwt
+    # )
+
+    # print(j)
+
+    # j.logout()
+
+
 
 class ClientOne(SalesforceStreamingClient):
     def shutdown_myself(self, connect_response_element):
